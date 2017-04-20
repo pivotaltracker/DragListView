@@ -541,10 +541,10 @@ public class BoardView extends HorizontalScrollView implements AutoScroller.Auto
     }
 
     public DragItemRecyclerView addColumnList(final DragItemAdapter adapter, final View header, boolean hasFixedItemSize) {
-        return addColumnList(adapter, header, hasFixedItemSize, null);
+        return addColumnList(adapter, header, hasFixedItemSize, null, null);
     }
 
-    public DragItemRecyclerView addColumnList(final DragItemAdapter adapter, final View header, boolean hasFixedItemSize, @LayoutRes Integer recyclerViewLayoutId) {
+    public DragItemRecyclerView addColumnList(final DragItemAdapter adapter, final View header, boolean hasFixedItemSize, @LayoutRes Integer recyclerViewLayoutId, Boolean enableColumnDrag) {
         final DragItemRecyclerView recyclerView;
         if (recyclerViewLayoutId == null) {
             recyclerView = new DragItemRecyclerView(getContext());
