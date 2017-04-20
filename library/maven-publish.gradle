@@ -49,10 +49,10 @@ afterEvaluate { project ->
                 pom.artifactId = POM_ARTIFACT_ID
                 pom.version = VERSION_NAME
 
-                repository(url: 'file:///Users/pivotal/.m2/repository') {
+                repository(url: "file:///${System.env.HOME}/.m2/repository") {
 //                    authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
                 }
-                snapshotRepository(url: 'file:///Users/pivotal/.m2/repository') {
+                snapshotRepository(url: "file:///${System.env.HOME}/.m2/repository") {
 //                    authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
                 }
 
