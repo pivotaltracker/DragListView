@@ -532,8 +532,11 @@ public class BoardView extends HorizontalScrollView implements AutoScroller.Auto
         mRootLayout.removeViewAt(1);
         mRootLayout.addView(mDragItem.getDragItemView());
     }
-
     public DragItemRecyclerView addColumnList(final DragItemAdapter adapter, final View header, boolean hasFixedItemSize) {
+        return addColumnList(adapter, header, hasFixedItemSize, null);
+    }
+
+    public DragItemRecyclerView addColumnList(final DragItemAdapter adapter, final View header, boolean hasFixedItemSize, DragItemRecyclerView.DragItemCallback dragItemCallback) {
         final DragItemRecyclerView recyclerView = new DragItemRecyclerView(getContext());
         recyclerView.setMotionEventSplittingEnabled(false);
         recyclerView.setDragItem(mDragItem);
@@ -565,6 +568,9 @@ public class BoardView extends HorizontalScrollView implements AutoScroller.Auto
                 }
             }
         });
+        if (dragItemCallback != null) {
+            recyclerView.setDragItemCallback(dragItemCallback);
+        }
 
         recyclerView.setAdapter(adapter);
         recyclerView.setDragEnabled(mDragEnabled);
