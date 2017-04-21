@@ -44,7 +44,7 @@ import java.util.ArrayList;
 
 public class ListFragment extends Fragment {
 
-    private ArrayList<Pair<Long, String>> mItemArray;
+    private ArrayList<Story> mItemArray;
     private DragListView mDragListView;
     private ListSwipeHelper mSwipeHelper;
     private MySwipeRefreshLayout mRefreshLayout;
@@ -83,7 +83,7 @@ public class ListFragment extends Fragment {
 
         mItemArray = new ArrayList<>();
         for (int i = 0; i < 40; i++) {
-            mItemArray.add(new Pair<>((long) i, "Item " + i));
+            mItemArray.add(new Story((long) i, "Item " + i));
         }
 
         mRefreshLayout.setScrollingView(mDragListView.getRecyclerView());
@@ -112,7 +112,7 @@ public class ListFragment extends Fragment {
 
                 // Swipe to delete on left
                 if (swipedDirection == ListSwipeItem.SwipeDirection.LEFT) {
-                    Pair<Long, String> adapterItem = (Pair<Long, String>) item.getTag();
+                    Story adapterItem = (Story) item.getTag();
                     int pos = mDragListView.getAdapter().getPositionForItem(adapterItem);
                     mDragListView.getAdapter().removeItem(pos);
                 }

@@ -24,6 +24,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -218,6 +219,7 @@ public class DragItemRecyclerView extends RecyclerView implements AutoScroller.A
 
     @Override
     public void onAutoScrollPositionBy(int dx, int dy) {
+        Log.d("autoScrollPosition", "by dx " + dx + "dy " + dy);
         if (isDragging()) {
             scrollBy(dx, dy);
             updateDragPositionAndScroll();
@@ -265,6 +267,7 @@ public class DragItemRecyclerView extends RecyclerView implements AutoScroller.A
     }
 
     private void updateDragPositionAndScroll() {
+        Log.d("updateDragPosition", "AndScroll");
         View view = findChildView(mDragItem.getX(), mDragItem.getY());
         int newPos = getChildLayoutPosition(view);
         if (newPos == NO_POSITION || view == null) {
@@ -285,7 +288,9 @@ public class DragItemRecyclerView extends RecyclerView implements AutoScroller.A
                 // Since notifyItemMoved scrolls the list we need to scroll back to where we were after the position change.
                 if (layoutManager.getOrientation() == LinearLayoutManager.VERTICAL) {
                     int topMargin = ((MarginLayoutParams) posView.getLayoutParams()).topMargin;
-                    layoutManager.scrollToPositionWithOffset(pos, posView.getTop() - topMargin);
+                    Log.d("scrolling to top", "top margin " + topMargin + "posView.getTop() " + posView.getTop());
+                    Log.d("item id is", "id: " + getAdapter().getItemId(pos));
+                    layoutManager.scrollToPositionWithOffset(pos,  posView.getTop() - topMargin);
                 } else {
                     int leftMargin = ((MarginLayoutParams) posView.getLayoutParams()).leftMargin;
                     layoutManager.scrollToPositionWithOffset(pos, posView.getLeft() - leftMargin);
@@ -322,6 +327,7 @@ public class DragItemRecyclerView extends RecyclerView implements AutoScroller.A
         // Start auto scroll if at the edge
         if (layoutManager.getOrientation() == LinearLayoutManager.VERTICAL) {
             if (mDragItem.getY() > getHeight() - view.getHeight() / 2 && !lastItemReached) {
+                Log.d("auto scrolling up", "triggered");
                 mAutoScroller.startAutoScroll(AutoScroller.ScrollDirection.UP);
             } else if (mDragItem.getY() < view.getHeight() / 2 && !firstItemReached) {
                 mAutoScroller.startAutoScroll(AutoScroller.ScrollDirection.DOWN);
@@ -369,6 +375,7 @@ public class DragItemRecyclerView extends RecyclerView implements AutoScroller.A
     }
 
     void onDragging(float x, float y) {
+        Log.d("onDragging", "position x " + x + "position y " + y);
         if (mDragState == DragState.DRAG_ENDED) {
             return;
         }

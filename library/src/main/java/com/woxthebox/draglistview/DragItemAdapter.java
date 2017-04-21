@@ -16,6 +16,7 @@
 
 package com.woxthebox.draglistview;
 
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;

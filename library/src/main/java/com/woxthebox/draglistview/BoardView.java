@@ -24,6 +24,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -42,6 +43,8 @@ public class BoardView extends HorizontalScrollView implements AutoScroller.Auto
         void onItemDragStarted(int column, int row);
 
         void onItemChangedColumn(int oldColumn, int newColumn);
+
+        void onItemDrag(int fromColumn, int fromRow, int toColumn, int toRow);
 
         void onItemDragEnded(int fromColumn, int fromRow, int toColumn, int toRow);
     }
@@ -422,6 +425,7 @@ public class BoardView extends HorizontalScrollView implements AutoScroller.Auto
     }
 
     public void scrollToItem(int column, int row, boolean animate) {
+        Log.d("scrollToItem", String.format("Scroll to item called col %s row %s", column, row));
         if (!isDragging() && mLists.size() > column && mLists.get(column).getAdapter().getItemCount() > row) {
             mScroller.forceFinished(true);
             scrollToColumn(column, animate);
@@ -559,6 +563,9 @@ public class BoardView extends HorizontalScrollView implements AutoScroller.Auto
 
             @Override
             public void onDragging(int itemPosition, float x, float y) {
+                if (mBoardListener != null) {
+                    mBoardListener.onItemDrag(mDragStartColumn, mDragStartRow, getColumnOfList(recyclerView), itemPosition);
+                }
             }
 
             @Override
