@@ -41,6 +41,8 @@ public class BoardView extends HorizontalScrollView implements AutoScroller.Auto
     public interface BoardListener {
         void onItemDragStarted(int column, int row);
 
+        void onDragItemChangedPosition(int oldColumn, int oldRow, int newColumn, int newRow);
+
         void onItemChangedColumn(int oldColumn, int newColumn);
 
         void onItemDragEnded(int fromColumn, int fromRow, int toColumn, int toRow);
@@ -542,6 +544,9 @@ public class BoardView extends HorizontalScrollView implements AutoScroller.Auto
         recyclerView.setHasFixedSize(hasFixedItemSize);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setDragItemListener(new DragItemRecyclerView.DragItemListener() {
+            private Integer mLastDragColumn;
+            private Integer mLastDragRow;
+
             @Override
             public void onDragStarted(int itemPosition, float x, float y) {
                 mDragStartColumn = getColumnOfList(recyclerView);
@@ -556,10 +561,20 @@ public class BoardView extends HorizontalScrollView implements AutoScroller.Auto
 
             @Override
             public void onDragging(int itemPosition, float x, float y) {
+                Integer column = getColumnOfList(recyclerView);
+                Integer row = itemPosition;
+                boolean positionChanged = !column.equals(mLastDragColumn) || !row.equals(mLastDragRow);
+                if (mBoardListener != null && positionChanged) {
+                    mLastDragColumn = column;
+                    mLastDragRow = row;
+                    mBoardListener.onDragItemChangedPosition(mDragStartColumn, mDragStartRow, getColumnOfList(recyclerView), itemPosition);
+                }
             }
 
             @Override
             public void onDragEnded(int newItemPosition) {
+                mLastDragColumn = null;
+                mLastDragRow = null;
                 if (mBoardListener != null) {
                     mBoardListener.onItemDragEnded(mDragStartColumn, mDragStartRow, getColumnOfList(recyclerView), newItemPosition);
                 }
