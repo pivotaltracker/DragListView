@@ -558,8 +558,6 @@ public class BoardView extends HorizontalScrollView implements AutoScroller.Auto
         recyclerView.setHasFixedSize(hasFixedItemSize);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setDragItemListener(new DragItemRecyclerView.DragItemListener() {
-            private Integer mLastDragColumn;
-            private Integer mLastDragRow;
 
             @Override
             public void onDragStarted(int itemPosition, float x, float y) {
