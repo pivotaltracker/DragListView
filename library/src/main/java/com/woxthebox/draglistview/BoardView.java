@@ -236,7 +236,7 @@ public class BoardView extends HorizontalScrollView implements AutoScroller.Auto
     private void updateScrollPosition() {
         // Updated event to scrollview coordinates
         DragItemRecyclerView currentList = getCurrentRecyclerView(mTouchX + getScrollX());
-        if (mCurrentRecyclerView != currentList) {
+        if (mCurrentRecyclerView != currentList && currentList.isDragEnabled()) {
             int oldColumn = getColumnOfList(mCurrentRecyclerView);
             int newColumn = getColumnOfList(currentList);
             long itemId = mCurrentRecyclerView.getDragItemId();
@@ -274,7 +274,7 @@ public class BoardView extends HorizontalScrollView implements AutoScroller.Auto
         return mTouchY - list.getTop();
     }
 
-    private DragItemRecyclerView getCurrentRecyclerView(float x) {
+    protected DragItemRecyclerView getCurrentRecyclerView(float x) {
         for (DragItemRecyclerView list : mLists) {
             View parent = (View) list.getParent();
             if (parent.getLeft() <= x && parent.getRight() > x) {
@@ -596,7 +596,11 @@ public class BoardView extends HorizontalScrollView implements AutoScroller.Auto
         });
 
         recyclerView.setAdapter(adapter);
-        recyclerView.setDragEnabled(mDragEnabled);
+        if (enableColumnDrag == null) {
+            recyclerView.setDragEnabled(mDragEnabled);
+        } else {
+            recyclerView.setDragEnabled(enableColumnDrag);
+        }
         adapter.setDragStartedListener(new DragItemAdapter.DragStartCallback() {
             @Override
             public boolean startDrag(View itemView, long itemId) {
