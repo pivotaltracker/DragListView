@@ -68,6 +68,8 @@ public class BoardView extends HorizontalScrollView implements AutoScroller.Auto
     private int mDragStartRow;
     private boolean mHasLaidOut;
     private boolean mDragEnabled = true;
+    private Integer mLastDragColumn;
+    private Integer mLastDragRow;
 
     public BoardView(Context context) {
         super(context);
