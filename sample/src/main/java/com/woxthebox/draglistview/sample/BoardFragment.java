@@ -24,6 +24,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,6 +38,7 @@ import android.widget.Toast;
 
 import com.woxthebox.draglistview.BoardView;
 import com.woxthebox.draglistview.DragItem;
+import com.woxthebox.draglistview.DragItemRecyclerView;
 
 import java.util.ArrayList;
 
@@ -45,6 +47,8 @@ public class BoardFragment extends Fragment {
     private static int sCreatedItems = 0;
     private BoardView mBoardView;
     private int mColumns;
+    private DragItemRecyclerView dragItemRecyclerView;
+    private static int position = -1;
 
     public static BoardFragment newInstance() {
         return new BoardFragment();
@@ -53,6 +57,7 @@ public class BoardFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sCreatedItems = 0;
         setHasOptionsMenu(true);
     }
 
@@ -101,10 +106,9 @@ public class BoardFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Board");
 
         addColumnList();
-        addColumnList();
-        addColumnList();
-        addColumnList();
     }
+
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -117,6 +121,13 @@ public class BoardFragment extends Fragment {
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.action_disable_drag).setVisible(mBoardView.isDragEnabled());
         menu.findItem(R.id.action_enable_drag).setVisible(!mBoardView.isDragEnabled());
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LinearLayoutManager layoutManager = (LinearLayoutManager) dragItemRecyclerView.getLayoutManager();
+        position = layoutManager.findFirstVisibleItemPosition();
     }
 
     @Override
@@ -170,7 +181,11 @@ public class BoardFragment extends Fragment {
             }
         });
 
-        mBoardView.addColumnList(listAdapter, header, false);
+        dragItemRecyclerView = mBoardView.addColumnList(listAdapter, header, false);
+
+        if (position != -1) {
+            dragItemRecyclerView.scrollToPosition(position);
+        }
         mColumns++;
     }
 
