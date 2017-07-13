@@ -37,6 +37,7 @@ import android.widget.Toast;
 
 import com.woxthebox.draglistview.BoardView;
 import com.woxthebox.draglistview.DragItem;
+import com.woxthebox.draglistview.DragItemRecyclerView;
 
 import java.util.ArrayList;
 
@@ -54,6 +55,8 @@ public class BoardFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        mColumns = 0;
+        sCreatedItems = 0;
     }
 
     @Override
@@ -170,7 +173,8 @@ public class BoardFragment extends Fragment {
             }
         });
 
-        mBoardView.addColumnList(listAdapter, header, false);
+        DragItemRecyclerView dragItemRecyclerView = mBoardView.addColumnList(listAdapter, header, false);
+        dragItemRecyclerView.setId(mColumns);
         mColumns++;
     }
 
