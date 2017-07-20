@@ -24,6 +24,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -36,6 +37,7 @@ import android.widget.LinearLayout;
 import android.widget.Scroller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.support.v7.widget.RecyclerView.NO_POSITION;
 
@@ -308,19 +310,37 @@ public class BoardView extends HorizontalScrollView implements AutoScroller.Auto
     }
 
     private int getClosestColumn() {
-        int middlePosX = getScrollX() + getMeasuredWidth() / 2;
-        int column = 0;
-        int minDiffX = Integer.MAX_VALUE;
+//        int middlePosX = getScrollX() + getMeasuredWidth() / 2;
+//        int column = 0;
+//        int minDiffX = Integer.MAX_VALUE;
+//        for (int i = 0; i < mLists.size(); i++) {
+//            RecyclerView list = mLists.get(i);
+//            int listPosX = ((View) list.getParent()).getLeft();
+//            int diffX = Math.abs(listPosX + mColumnWidth / 2 - middlePosX);
+//            if (diffX < minDiffX) {
+//                minDiffX = diffX;
+//                column = i;
+//            }
+//        }
+//        return column;
+
+        int closestColumn = 0;
+        int smallestDistance = mColumnWidth * mLists.size();
+
         for (int i = 0; i < mLists.size(); i++) {
             RecyclerView list = mLists.get(i);
             int listPosX = ((View) list.getParent()).getLeft();
-            int diffX = Math.abs(listPosX + mColumnWidth / 2 - middlePosX);
-            if (diffX < minDiffX) {
-                minDiffX = diffX;
-                column = i;
+            int currentScroll = getScrollX();
+            Log.d("current scroll", String.format("column: %d", currentScroll));
+            int distance = Math.abs(currentScroll - listPosX);
+            Log.d("distance", String.format("distance: %d", distance));
+            if (distance < smallestDistance) {
+                smallestDistance = distance;
+                closestColumn = i;
             }
         }
-        return column;
+        Log.d("closestColumn", String.format("column: %d", closestColumn));
+        return closestColumn;
     }
 
     private boolean snapToColumnWhenScrolling() {
@@ -447,10 +467,10 @@ public class BoardView extends HorizontalScrollView implements AutoScroller.Auto
         }
 
         View parent = (View) mLists.get(column).getParent();
-        int newX = parent.getLeft() - (getMeasuredWidth() - parent.getMeasuredWidth()) / 2;
+        int newX = parent.getLeft();
         int maxScroll = mRootLayout.getMeasuredWidth() - getMeasuredWidth();
         newX = newX < 0 ? 0 : newX;
-        newX = newX > maxScroll ? maxScroll : newX;
+//        newX = newX > maxScroll ? maxScroll : newX;
         if (getScrollX() != newX) {
             mScroller.forceFinished(true);
             if (animate) {
